@@ -1,4 +1,6 @@
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 public class ATMMain {
     public static void main(String[] args){
         ATMAccount account = new ATMAccount(
@@ -27,45 +29,55 @@ public class ATMMain {
          JButton changePinButton = new JButton("Change PIN");
         changePinButton.setBounds(100,230,200,40);
 
-        balanceButton.addActionListener(e -> {
-             JOptionPane.showMessageDialog(frame, "Current balance: " + account.getBalance());
+        balanceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Current balance: " + account.getBalance());
+            }
         });
 
-         depositButton.addActionListener(e -> {
-            String input = JOptionPane.showInputDialog(frame, "Enter deposit amount:");
-            if (input != null){
-                double amount = Double.parseDouble(input);
-
-                String result = account.Deposit(amount);
+         depositButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String input = JOptionPane.showInputDialog(frame, "Enter deposit amount:");
+                if (input != null){
+                    double amount = Double.parseDouble(input);
+                    String result = account.Deposit(amount);
                     JOptionPane.showMessageDialog(frame, result);
+                }
             }
         });
 
-        withdrawButton.addActionListener(e -> {
-            String pin = JOptionPane.showInputDialog(frame, "Enter PIN:");
-            if (pin == null){
-                return;
+        withdrawButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String pin = JOptionPane.showInputDialog(frame, "Enter PIN:");
+                if (pin == null){
+                    return;
+                }
+                String input = JOptionPane.showInputDialog(frame, "Enter withdrawal amount:");
+                if (input != null){
+                    double amount = Double.parseDouble(input);
+                    String result = account.Withdraw(pin, amount);
+                    JOptionPane.showMessageDialog(frame, result);
+                }
             }
-            String input = JOptionPane.showInputDialog(frame, "Enter withdrawal amount:");
-            if (input != null){
-                double amount = Double.parseDouble(input);
-                String result = account.Withdraw(pin, amount);
-                
+        });
+
+         changePinButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String oldpin = JOptionPane.showInputDialog(frame, "Enter old PIN:");
+                if (oldpin == null){
+                    return;
+                }
+                String newpin = JOptionPane.showInputDialog(frame, "Enter new PIN:");
+                if (newpin == null){
+                    return;
+                }
+                String result = account.changePin(oldpin, newpin);
                 JOptionPane.showMessageDialog(frame, result);
-            }           
-        });
-
-         changePinButton.addActionListener(e -> {
-            String oldpin = JOptionPane.showInputDialog(frame, "Enter old PIN:");
-            if (oldpin == null){
-                return;
             }
-            String newpin = JOptionPane.showInputDialog(frame, "Enter new PIN:");
-            if (newpin == null){
-               return;
-            }           
-            String result = account.changePin(oldpin, newpin);
-            JOptionPane.showMessageDialog(frame, result);
         });
 
         frame.add(welcome);
